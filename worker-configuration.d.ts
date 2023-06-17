@@ -1,6 +1,10 @@
 interface Env {
-	DEEPGRAM_API_KEY;
-	OPENAI_API_KEY;
+	DEEPGRAM_API_KEY
+	OPENAI_API_KEY
+	SANITY_API_TOKEN
+	SANITY_PROJECT_ID
+	SANITY_DATASET
+	INNGEST_EVENT_KEY
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//

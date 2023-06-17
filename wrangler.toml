@@ -2,6 +2,11 @@ name = "deepgram-wrangler"
 main = "src/worker.ts"
 compatibility_date = "2023-06-16"
 
+[vars]
+SANITY_DATASET = "production"
+SANITY_PROJECT_ID = "i1a93n76"
+
+
 # # KV Namespace binding - For more information: https://developers.cloudflare.com/workers/runtime-apis/kv
 # [[kv_namespaces]]
 # binding = "MY_KV_NAMESPACE"
