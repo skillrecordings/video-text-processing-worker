@@ -95,10 +95,10 @@ export default {
 			llmSuggestions,
 		}
 
-		// await inngest.send({
-		// 	name: 'tip/video.llm.suggestions.created',
-		// 	data,
-		// })
+		await inngest.send({
+			name: 'tip/video.llm.suggestions.created',
+			data,
+		})
 
 		console.log('videoResourceId', videoResourceId)
 

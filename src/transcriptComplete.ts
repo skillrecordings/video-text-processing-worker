@@ -30,8 +30,8 @@ function transcriptAsParagraphsWithTimestamps(results: any) {
 		const startTime = formatTimeString(convertTime(paragraph.sentences[0].start))
 		const text = paragraph.sentences.map((x) => x.text).join(' ')
 
-		return `${acc}
-[${startTime}] ${text}
+		return `${acc}[${startTime}] ${text}
+		
 `
 	}, ``)
 }
