@@ -1,16 +1,8 @@
 import { getInngest } from './get-inngest'
+import { Word, srtProcessor } from './srt-processor'
 
-function srtFromTranscriptResult(results: { utterances: { transcript: string; start: number; end: number }[] }) {
-	let srt = ``
-
-	for (let i = 0; i < results.utterances.length; i++) {
-		const utterance = results.utterances[i]
-		const start = new Date(utterance.start * 1000).toISOString().substr(11, 12).replace('.', ',')
-		const end = new Date(utterance.end * 1000).toISOString().substr(11, 12).replace('.', ',')
-		srt += `${i + 1}\n${start} --> ${end}\n${utterance.transcript}\n\n`
-	}
-
-	return srt
+function srtFromTranscriptResult(results: { channels: { alternatives: { words: Word[] }[] }[] }) {
+	return srtProcessor(results.channels[0].alternatives[0].words)
 }
 
 function fullTranscriptFromResults(results: any) {
