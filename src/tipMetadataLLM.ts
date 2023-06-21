@@ -95,14 +95,14 @@ export default {
 			llmSuggestions,
 		}
 
-		await inngest.send({
-			name: 'tip/video.llm.suggestions.created',
-			data,
-		})
+		// await inngest.send({
+		// 	name: 'tip/video.llm.suggestions.created',
+		// 	data,
+		// })
 
 		console.log('videoResourceId', videoResourceId)
 
-		return new Response(JSON.stringify(llmSuggestions, null, 2), {
+		return new Response(JSON.stringify(data, null, 2), {
 			headers: {
 				'content-type': 'application/json;charset=UTF-8',
 			},

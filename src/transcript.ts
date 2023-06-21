@@ -30,7 +30,7 @@ export default {
 		})
 
 		const deepgramParams = new URLSearchParams({
-			model: 'whisper',
+			model: 'whisper-large',
 			punctuate: 'true',
 			paragraphs: 'true',
 			utterances: 'true',
