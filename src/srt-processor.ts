@@ -3,7 +3,7 @@ export type Word = {
 	start: number
 	end: number
 	confidence: number
-	punctuated_word: number
+	punctuated_word: string
 }
 
 function convertTime(inputSeconds: number) {
@@ -26,7 +26,7 @@ export function srtProcessor(words: Word[]) {
 
 	words.forEach((item, index) => {
 		let timeExceeded = currentTimeInSeconds + (item.end - item.start) >= timeLimitInSeconds
-		let charCountExceeded = currentCharCount + item.word.length > charLimit
+		let charCountExceeded = currentCharCount + item.punctuated_word.length > charLimit
 
 		if (timeExceeded || charCountExceeded || index === words.length - 1) {
 			if (tempArray.length) {
@@ -40,7 +40,7 @@ export function srtProcessor(words: Word[]) {
 		if (!timeExceeded || !charCountExceeded) {
 			tempArray.push(item)
 			currentTimeInSeconds += item.end - item.start
-			currentCharCount += item.word.length
+			currentCharCount += item.punctuated_word.length
 		}
 
 		if (index === words.length - 1 && (!timeExceeded || !charCountExceeded)) {
@@ -51,7 +51,7 @@ export function srtProcessor(words: Word[]) {
 	let srtEntries = arrayByTimes.map((timeBlock, index) => {
 		let startTime = convertTime(timeBlock[0].start)
 		let endTime = convertTime(timeBlock[timeBlock.length - 1].end)
-		let text = timeBlock.map((x) => x.word).join(' ')
+		let text = timeBlock.map((x) => x.punctuated_word).join(' ')
 		let srtEntry = `${index + 1}
 ${startTime} --> ${endTime}
 ${text}
