@@ -4,8 +4,9 @@ import { MemoryVectorStore } from 'langchain/vectorstores/memory'
 import { OpenAI, OpenAIChat } from 'langchain/llms/openai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { RetrievalQAChain } from 'langchain/chains'
-import { HumanChatMessage, SystemChatMessage } from 'langchain/schema'
+import { HumanMessage, SystemMessage } from 'langchain/schema'
 import { getInngest } from './get-inngest'
+import { getSanityClient } from './get-sanity-client'
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -15,8 +16,11 @@ export default {
 		const siteName = url.searchParams.get('siteName') || 'epic-web'
 
 		const inngest = getInngest({ env, projectName: siteName })
+		const sanityClient = getSanityClient({ env, projectName: siteName })
 
-		const { transcript }: { transcript: string } = await request.json()
+		const { transcript, tipId }: { transcript: string; tipId: string } = await request.json()
+
+		const tip = await sanityClient.fetch(`*[_id == $tipId][0]{title}`, { tipId })
 
 		const splitter = new CharacterTextSplitter()
 		const docs = await splitter.createDocuments([transcript])
@@ -42,11 +46,13 @@ export default {
 
 		* several drafts for potential titles, sorted by the best first. avoid exclamation points.vary the style. try to summarize the content in a way that will make people want to click through.
 		* an article body that serves as a written version of the transcript to be posted alongside the video for people that prefer text. use markdown formatting for the body. divide the text into meaningful sections. do not include an h1 or #. the language for the body should be presented as written material and not as something being watched.
-		* several drafts for potential SEO descriptions, sorted by the best first. use markdown formatting for the description.
+		* several drafts for potential SEO descriptions, sorted by the best first. use markdown formatting for the description. descriptions are limited to 160 characters.
 		* several drafts for potential tweets, sorted by the best first. avoid hashtags and @mentions. don't overuse emoji or excited punctuation. try to summarize the content in a way that will make people want to click through. using hashtags will ruin everything. do not use them like some sort of piece of crap boomer. poast like you mean it.
 		* several drafts for potential emails, sorted by the best first. use markdown formatting for the email body.
 		* a list of keywords or content tags
 		* finally a selection of ideas for additional articles, videos, or follow ups
+
+		The tip is originally titled "${tip.title}" which should be considered for your suggestions.
 		
 		Output should be in JSON format with all text properly escaped for parsing using this template:
 
@@ -72,12 +78,12 @@ export default {
 			try {
 				parsedSuggestions = JSON.parse(llmSuggestions.text.trim())
 			} catch (error: any) {
-				const chat = new ChatOpenAI({ openAIApiKey: env.OPENAI_API_KEY, modelName: 'gpt-4-0613', temperature: 0.2 })
+				const chat = new ChatOpenAI({ openAIApiKey: env.OPENAI_API_KEY, modelName: 'gpt-4', temperature: 0.2 })
 				const response = await chat.call([
-					new SystemChatMessage(
+					new SystemMessage(
 						`You are an efficient JSON data formatter. You will be provided with broken json. Parse it and make sure it is valid JSON and return ONLY the JSON`
 					),
-					new HumanChatMessage(llmSuggestions.text.trim()),
+					new HumanMessage(llmSuggestions.text.trim()),
 				])
 
 				console.log('chat response', response.text.trim())
