@@ -1,7 +1,7 @@
 import { CharacterTextSplitter } from 'langchain/text_splitter'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { MemoryVectorStore } from 'langchain/vectorstores/memory'
-import { OpenAI, OpenAIChat } from 'langchain/llms/openai'
+import { OpenAI } from 'langchain/llms/openai'
 import { ChatOpenAI } from 'langchain/chat_models/openai'
 import { RetrievalQAChain } from 'langchain/chains'
 import { HumanMessage, SystemMessage } from 'langchain/schema'
@@ -30,7 +30,7 @@ export default {
 		const model = new OpenAI({ openAIApiKey: env.OPENAI_API_KEY, modelName: 'gpt-3.5-turbo-16k', temperature: 0.2 })
 		const chain = RetrievalQAChain.fromLLM(model, store.asRetriever())
 
-		const question = `# SEO Expert Video Metadata Assitant
+		const question = `# SEO Expert Video Metadata Assistant
 		
 		You're a deeply technical SEO expert with a focus on Modern Web Development
 

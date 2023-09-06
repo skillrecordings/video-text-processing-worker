@@ -1,8 +1,9 @@
 interface Env {
 	DEEPGRAM_API_KEY
 	OPENAI_API_KEY
-	INNGEST_EVENT_KEY
+	EPIC_WEB_INNGEST_EVENT_KEY
 	EPIC_WEB_SANITY_TOKEN
+	EPIC_WEB_SANITY_PROJECT_ID
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//

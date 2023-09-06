@@ -52,12 +52,10 @@ export function srtProcessor(words: Word[]) {
 		let startTime = convertTime(timeBlock[0].start)
 		let endTime = convertTime(timeBlock[timeBlock.length - 1].end)
 		let text = timeBlock.map((x) => x.punctuated_word).join(' ')
-		let srtEntry = `${index + 1}
+		return `${index + 1}
 ${startTime} --> ${endTime}
 ${text}
   `
-
-		return srtEntry
 	})
 
 	return srtEntries.join('\n\n')
