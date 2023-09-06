@@ -1,3 +1,4 @@
 # cloudflare workers application should ignore
 .dev.vars
 node_modules/
+.idea/

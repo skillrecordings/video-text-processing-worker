@@ -24,7 +24,23 @@ function formatTimeString(str: string) {
 }
 
 function transcriptAsParagraphsWithTimestamps(results: any) {
-	const { paragraphs } = results.channels[0].alternatives[0].paragraphs
+	let paragraphs
+	if (results.channels[0].alternatives[0].paragraphs) {
+		paragraphs = results.channels[0].alternatives[0].paragraphs.paragraphs
+	} else {
+		paragraphs = [
+			{
+				text: results.channels[0].alternatives[0].transcript,
+				sentences: [
+					{
+						text: results.channels[0].alternatives[0].transcript,
+						start: 0,
+						end: results.channels[0].alternatives[0].words[results.channels[0].alternatives[0].words.length - 1].end,
+					},
+				],
+			},
+		]
+	}
 
 	return paragraphs.reduce((acc: string, paragraph: { sentences: { text: string; start: number; end: number }[] }) => {
 		const startTime = formatTimeString(convertTime(paragraph.sentences[0].start))
@@ -49,6 +65,8 @@ export default {
 		if (!results) {
 			return new Response(`Bad request`, { status: 400 })
 		}
+
+		console.log({ results })
 
 		const srt = srtFromTranscriptResult(results)
 		const transcript = transcriptAsParagraphsWithTimestamps(results)
